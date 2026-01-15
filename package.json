@@ -25,10 +25,11 @@
     "node": ">=20.0.0"
   },
   "dependencies": {
+    "@apidevtools/json-schema-ref-parser": "^10.1.0",
     "@modelcontextprotocol/sdk": "^0.6.0",
     "axios": "^1.6.5",
+    "dotenv": "^17.2.3",
     "js-yaml": "^4.1.0",
-    "@apidevtools/json-schema-ref-parser": "^10.1.0",
     "p-limit": "^5.0.0",
     "zod": "^3.22.4"
   },
