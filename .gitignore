@@ -9,6 +9,9 @@ dist/
 .env.local
 .env.*.local
 
+# MCP configuration (may contain credentials)
+.mcp.json
+
 # Logs
 logs
 *.log

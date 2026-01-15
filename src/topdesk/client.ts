@@ -27,6 +27,7 @@ const DEBUG = process.env.DEBUG === 'true';
 interface TopdeskClientConfig {
   baseUrl: string;
   apiToken: string;
+  useBasicAuth?: boolean;
   timeout?: number;
   maxRetries?: number;
   concurrencyLimit?: number;
@@ -47,10 +48,14 @@ export class TopdeskClient {
   private config: Required<TopdeskClientConfig>;
   private limiter: ReturnType<typeof pLimit>;
 
+  private useBasicAuth: boolean;
+
   constructor(config: TopdeskClientConfig) {
+    this.useBasicAuth = config.useBasicAuth ?? false;
     this.config = {
       baseUrl: config.baseUrl.replace(/\/$/, ''), // Remove trailing slash
       apiToken: config.apiToken,
+      useBasicAuth: this.useBasicAuth,
       timeout: config.timeout ?? 20000, // 20s default
       maxRetries: config.maxRetries ?? 3,
       concurrencyLimit: config.concurrencyLimit ?? 10,
@@ -70,8 +75,12 @@ export class TopdeskClient {
     // Request interceptor: Add authentication
     this.client.interceptors.request.use(
       (config) => {
-        // Add API token authentication
-        config.headers.Authorization = `TOKEN id="${this.config.apiToken}"`;
+        // Add authentication based on type
+        if (this.useBasicAuth) {
+          config.headers.Authorization = `Basic ${this.config.apiToken}`;
+        } else {
+          config.headers.Authorization = `TOKEN id="${this.config.apiToken}"`;
+        }
 
         if (DEBUG) {
           this.logRequest(config);
@@ -393,17 +402,27 @@ export class TopdeskClient {
 export function createTopdeskClientFromEnv(): TopdeskClient {
   const baseUrl = process.env.TOPDESK_BASE_URL;
   const apiToken = process.env.TOPDESK_API_TOKEN;
+  const username = process.env.TOPDESK_USERNAME;
+  const apiKey = process.env.TOPDESK_API_KEY;
 
   if (!baseUrl) {
     throw new Error('TOPDESK_BASE_URL environment variable is required');
   }
 
-  if (!apiToken) {
-    throw new Error('TOPDESK_API_TOKEN environment variable is required');
+  // Support both TOKEN auth and Basic Auth (username + api key)
+  let token: string;
+  if (apiToken) {
+    token = apiToken;
+  } else if (username && apiKey) {
+    // Create Basic Auth token from username:api_key
+    token = Buffer.from(`${username}:${apiKey}`).toString('base64');
+  } else {
+    throw new Error('Either TOPDESK_API_TOKEN or both TOPDESK_USERNAME and TOPDESK_API_KEY are required');
   }
 
   return new TopdeskClient({
     baseUrl,
-    apiToken,
+    apiToken: token,
+    useBasicAuth: !!(username && apiKey),
   });
 }
