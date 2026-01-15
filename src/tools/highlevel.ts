@@ -338,20 +338,20 @@ export interface HighLevelTool {
 export const highLevelTools: HighLevelTool[] = [
   // Tickets
   {
-    name: 'topdesk.tickets.my_list',
+    name: 'topdesk_tickets_my_list',
     description:
       'List tickets assigned to me or where I am operator/caller. Supports filtering by status, priority, and date.',
     inputSchema: ticketsMyListSchema,
     handler: (client, args) => ticketsMyList(client, args as z.infer<typeof ticketsMyListSchema>),
   },
   {
-    name: 'topdesk.tickets.get',
+    name: 'topdesk_tickets_get',
     description: 'Get detailed information about a specific ticket by ID.',
     inputSchema: ticketsGetSchema,
     handler: (client, args) => ticketsGet(client, args as z.infer<typeof ticketsGetSchema>),
   },
   {
-    name: 'topdesk.tickets.search',
+    name: 'topdesk_tickets_search',
     description:
       'Search tickets with flexible filters including query text, status, priority, and date range.',
     inputSchema: ticketsSearchSchema,
@@ -360,26 +360,26 @@ export const highLevelTools: HighLevelTool[] = [
 
   // Assets
   {
-    name: 'topdesk.assets.create',
+    name: 'topdesk_assets_create',
     description:
       'Create a new asset with name, type, serial number, asset tag, and other properties.',
     inputSchema: assetsCreateSchema,
     handler: (client, args) => assetsCreate(client, args as z.infer<typeof assetsCreateSchema>),
   },
   {
-    name: 'topdesk.assets.update',
+    name: 'topdesk_assets_update',
     description: 'Update an existing asset by ID with new property values.',
     inputSchema: assetsUpdateSchema,
     handler: (client, args) => assetsUpdate(client, args as z.infer<typeof assetsUpdateSchema>),
   },
   {
-    name: 'topdesk.assets.get',
+    name: 'topdesk_assets_get',
     description: 'Get detailed information about a specific asset by ID.',
     inputSchema: assetsGetSchema,
     handler: (client, args) => assetsGet(client, args as z.infer<typeof assetsGetSchema>),
   },
   {
-    name: 'topdesk.assets.search',
+    name: 'topdesk_assets_search',
     description:
       'Search assets by name, serial number, asset tag, type, location, or user.',
     inputSchema: assetsSearchSchema,
@@ -388,14 +388,14 @@ export const highLevelTools: HighLevelTool[] = [
 
   // Knowledge
   {
-    name: 'topdesk.knowledge.search',
+    name: 'topdesk_knowledge_search',
     description:
       'Search knowledge base items by query text, category, or modification date.',
     inputSchema: knowledgeSearchSchema,
     handler: (client, args) => knowledgeSearch(client, args as z.infer<typeof knowledgeSearchSchema>),
   },
   {
-    name: 'topdesk.knowledge.get',
+    name: 'topdesk_knowledge_get',
     description: 'Get detailed information about a specific knowledge item by ID.',
     inputSchema: knowledgeGetSchema,
     handler: (client, args) => knowledgeGet(client, args as z.infer<typeof knowledgeGetSchema>),

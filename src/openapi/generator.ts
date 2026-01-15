@@ -27,8 +27,8 @@ function generateToolName(operation: OpenAPIOperation): string {
   // Get primary tag (or 'general' if no tags)
   const tag = operation.tags?.[0]?.toLowerCase() || 'general';
 
-  // Format: topdesk.raw.<tag>.<operationId>
-  return `topdesk.raw.${tag}.${operationId}`;
+  // Format: topdesk_raw_<tag>_<operationId>
+  return `topdesk_raw_${tag}_${operationId}`;
 }
 
 /**
@@ -236,8 +236,8 @@ export function groupToolsByTag(tools: MCPTool[]): Map<string, MCPTool[]> {
   const groups = new Map<string, MCPTool[]>();
 
   for (const tool of tools) {
-    // Extract tag from tool name (topdesk.raw.<tag>.*)
-    const parts = tool.name.split('.');
+    // Extract tag from tool name (topdesk_raw_<tag>_*)
+    const parts = tool.name.split('_');
     const tag = parts[2] || 'general';
 
     if (!groups.has(tag)) {
